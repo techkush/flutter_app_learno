@@ -105,6 +105,7 @@ class _RegisterFormState extends State<RegisterForm> {
           "userRole": _userRole,
           "school": _selectedSchool
         }).then((value) {
+          Navigator.of(context).pop();
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => Home()));
         }).catchError((e) {
