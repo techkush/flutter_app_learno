@@ -22,8 +22,7 @@ class _RegisterFormState extends State<RegisterForm> {
   Schools _school;
   List<String> _schoolList = [];
   String _selectedSchool;
-  FocusNode myFocusNode;
-
+  DateTime selectedDate;
 
   String _error;
   bool _loading = false;
@@ -103,7 +102,8 @@ class _RegisterFormState extends State<RegisterForm> {
           "mobileNumber": _mobileNumber,
           "gender": _gender,
           "userRole": _userRole,
-          "school": _selectedSchool
+          "school": _selectedSchool,
+          "birthday": selectedDate
         }).then((value) {
           Navigator.of(context).pop();
           Navigator.push(
@@ -117,6 +117,18 @@ class _RegisterFormState extends State<RegisterForm> {
         });
       });
     }
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1900, 1),
+        lastDate: DateTime.now());
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
   }
 
   @override
@@ -195,6 +207,40 @@ class _RegisterFormState extends State<RegisterForm> {
                         SizedBox(
                           height: 20,
                         ),
+                        InkWell(
+                          onTap: () {
+                            _selectDate(context);
+                          },
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 50,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20)),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Icon(Icons.calendar_today,
+                                      color: Colors.grey),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Flexible(
+                                      child: selectedDate == null
+                                          ? Text("Select your Birthday", style: TextStyle(color: Colors.grey, fontSize: 16),)
+                                          : Text("${selectedDate.toLocal()}"
+                                              .split(' ')[0]))
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
                         // Gender Drop Down
                         Container(
                           width: MediaQuery.of(context).size.width,
@@ -221,7 +267,7 @@ class _RegisterFormState extends State<RegisterForm> {
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton(
                                         value: _gender,
-                                        hint: Text('Gender'),
+                                        hint: Text('Gender', style: TextStyle(color: Colors.grey)),
                                         items: [
                                           DropdownMenuItem(
                                             child: Text("Male"),
@@ -233,7 +279,8 @@ class _RegisterFormState extends State<RegisterForm> {
                                           ),
                                         ],
                                         onChanged: (value) {
-                                          FocusScope.of(context).requestFocus(FocusNode());
+                                          FocusScope.of(context)
+                                              .requestFocus(FocusNode());
                                           setState(() {
                                             _gender = value;
                                           });
@@ -273,7 +320,7 @@ class _RegisterFormState extends State<RegisterForm> {
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton(
                                         value: _userRole,
-                                        hint: Text('User Role'),
+                                        hint: Text('User Role', style: TextStyle(color: Colors.grey)),
                                         items: [
                                           DropdownMenuItem(
                                             child: Text("Student"),
@@ -289,7 +336,8 @@ class _RegisterFormState extends State<RegisterForm> {
                                           ),
                                         ],
                                         onChanged: (value) {
-                                          FocusScope.of(context).requestFocus(FocusNode());
+                                          FocusScope.of(context)
+                                              .requestFocus(FocusNode());
                                           setState(() {
                                             _userRole = value;
                                           });
@@ -331,18 +379,19 @@ class _RegisterFormState extends State<RegisterForm> {
                                       items: _schoolList.map((view) {
                                         print(view);
                                         return new DropdownMenuItem(
-                                          child: new Text(view),
+                                          child: new Text(view, ),
                                           value: view,
                                         );
                                       }).toList(),
                                       value: _selectedSchool,
                                       onChanged: (String newValue) {
-                                        FocusScope.of(context).requestFocus(FocusNode());
+                                        FocusScope.of(context)
+                                            .requestFocus(FocusNode());
                                         setState(() {
                                           _selectedSchool = newValue;
                                         });
                                       },
-                                      hint: Text('Schools'),
+                                      hint: Text('School',style: TextStyle(color: Colors.grey)),
                                     ),
                                   ),
                                 )

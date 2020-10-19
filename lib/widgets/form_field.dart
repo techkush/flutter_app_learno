@@ -53,7 +53,8 @@ class _RoundTextFieldState extends State<RoundTextField> {
                     focusedBorder: InputBorder.none,
                     enabledBorder: InputBorder.none,
                     errorBorder: InputBorder.none,
-                    hintText: widget.hintText
+                    hintText: widget.hintText,
+                  hintStyle: TextStyle(color: Colors.grey)
                 ) ,
               ),
             )
