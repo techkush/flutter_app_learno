@@ -117,14 +117,14 @@ class _SignUpState extends State<SignUp> {
     AuthCredential credential = GoogleAuthProvider.getCredential(
         idToken: googleSignInAuthentication.idToken,
         accessToken: googleSignInAuthentication.accessToken);
-    await FirebaseAuth.instance.signInWithCredential(credential).then((value) async {
-      await FirebaseAuth.instance.currentUser().then((value) async {
+    await FirebaseAuth.instance.signInWithCredential(credential).then((value_1) async {
+      await FirebaseAuth.instance.currentUser().then((value_2) async {
         await Firestore.instance
             .collection('users')
-            .document(value.uid)
+            .document(value_2.uid)
             .get()
-            .then((value) {
-          if (!value.exists) {
+            .then((value_3) {
+          if (!value_3.exists) {
             Navigator.pop(context);
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => RegisterForm()));

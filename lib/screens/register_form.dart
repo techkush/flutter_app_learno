@@ -8,12 +8,14 @@ import 'package:flutter_app_learno/widgets/form_field.dart';
 import 'package:flutter_app_learno/widgets/progress.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+// ignore: must_be_immutable
 class RegisterForm extends StatefulWidget {
   @override
   _RegisterFormState createState() => _RegisterFormState();
 }
 
 class _RegisterFormState extends State<RegisterForm> {
+
   String _firstName;
   String _lastName;
   String _mobileNumber;
@@ -58,8 +60,8 @@ class _RegisterFormState extends State<RegisterForm> {
         .collection('app_settings')
         .document('schools')
         .setData({"schools": schools});
-    getSchoolList();
     super.initState();
+    getSchoolList();
   }
 
   void getSchoolList() async {
@@ -71,7 +73,6 @@ class _RegisterFormState extends State<RegisterForm> {
     for (final e in _school.schoolList) {
       _schoolList.add(e);
     }
-    print(_school.schoolList);
   }
 
   void saveData() async {
@@ -103,7 +104,10 @@ class _RegisterFormState extends State<RegisterForm> {
           "gender": _gender,
           "userRole": _userRole,
           "school": _selectedSchool,
-          "birthday": selectedDate
+          "birthday": selectedDate,
+          "photoUrl": value.photoUrl,
+          "email": value.email,
+          "id": value.uid
         }).then((value) {
           Navigator.of(context).pop();
           Navigator.push(
@@ -209,6 +213,8 @@ class _RegisterFormState extends State<RegisterForm> {
                         ),
                         InkWell(
                           onTap: () {
+                            FocusScope.of(context)
+                                .requestFocus(FocusNode());
                             _selectDate(context);
                           },
                           child: Container(
@@ -230,7 +236,12 @@ class _RegisterFormState extends State<RegisterForm> {
                                   ),
                                   Flexible(
                                       child: selectedDate == null
-                                          ? Text("Select your Birthday", style: TextStyle(color: Colors.grey, fontSize: 16),)
+                                          ? Text(
+                                              "Select your Birthday",
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 16),
+                                            )
                                           : Text("${selectedDate.toLocal()}"
                                               .split(' ')[0]))
                                 ],
@@ -267,7 +278,9 @@ class _RegisterFormState extends State<RegisterForm> {
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton(
                                         value: _gender,
-                                        hint: Text('Gender', style: TextStyle(color: Colors.grey)),
+                                        hint: Text('Gender',
+                                            style:
+                                                TextStyle(color: Colors.grey)),
                                         items: [
                                           DropdownMenuItem(
                                             child: Text("Male"),
@@ -320,7 +333,9 @@ class _RegisterFormState extends State<RegisterForm> {
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton(
                                         value: _userRole,
-                                        hint: Text('User Role', style: TextStyle(color: Colors.grey)),
+                                        hint: Text('User Role',
+                                            style:
+                                                TextStyle(color: Colors.grey)),
                                         items: [
                                           DropdownMenuItem(
                                             child: Text("Student"),
@@ -377,9 +392,10 @@ class _RegisterFormState extends State<RegisterForm> {
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton<String>(
                                       items: _schoolList.map((view) {
-                                        print(view);
                                         return new DropdownMenuItem(
-                                          child: new Text(view, ),
+                                          child: new Text(
+                                            view,
+                                          ),
                                           value: view,
                                         );
                                       }).toList(),
@@ -391,7 +407,8 @@ class _RegisterFormState extends State<RegisterForm> {
                                           _selectedSchool = newValue;
                                         });
                                       },
-                                      hint: Text('School',style: TextStyle(color: Colors.grey)),
+                                      hint: Text('School',
+                                          style: TextStyle(color: Colors.grey)),
                                     ),
                                   ),
                                 )
