@@ -10,6 +10,7 @@ import 'package:flutter_app_learno/screens/register_form.dart';
 import 'package:flutter_app_learno/widgets/auth_button.dart';
 import 'package:flutter_app_learno/widgets/form_field.dart';
 import 'package:flutter_app_learno/widgets/progress.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class SignUp extends StatefulWidget {
@@ -94,7 +95,7 @@ class _SignUpState extends State<SignUp> {
             }
           });
         }).catchError((e) {
-          LoginError(
+          CommonError(
               title: 'Register Error!',
               description:
               'Something is wrong. Please check your email & password.')
@@ -136,7 +137,7 @@ class _SignUpState extends State<SignUp> {
         });
       });
     }).catchError((e) {
-      LoginError(
+      CommonError(
           title: 'Login Error!',
           description:
           'Something is wrong. Please check your connection.')
@@ -188,7 +189,7 @@ class _SignUpState extends State<SignUp> {
                         // Email TextFormField
                         RoundTextField(
                             icon: Icon(
-                              Icons.email,
+                              FeatherIcons.mail,
                               color: Colors.grey,
                             ),
                             hintText: 'Email Address',
@@ -200,7 +201,7 @@ class _SignUpState extends State<SignUp> {
                         ),
                         RoundTextField(
                             icon: Icon(
-                              Icons.lock,
+                              FeatherIcons.lock,
                               color: Colors.grey,
                             ),
                             hintText: 'Password',
@@ -212,7 +213,7 @@ class _SignUpState extends State<SignUp> {
                         ),
                         RoundTextField(
                             icon: Icon(
-                              Icons.lock,
+                              FeatherIcons.lock,
                               color: Colors.grey,
                             ),
                             hintText: 'RePassword',

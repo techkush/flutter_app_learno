@@ -11,6 +11,7 @@ import 'package:flutter_app_learno/screens/sign_up.dart';
 import 'package:flutter_app_learno/widgets/auth_button.dart';
 import 'package:flutter_app_learno/widgets/form_field.dart';
 import 'package:flutter_app_learno/widgets/progress.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class Login extends StatefulWidget {
@@ -90,7 +91,7 @@ class _LoginState extends State<Login> {
           setState(() {
             _submitted = false;
           });
-          LoginError(
+          CommonError(
                   title: 'Login Error!',
                   description:
                       'Something is wrong. Please check your email & password.')
@@ -129,7 +130,7 @@ class _LoginState extends State<Login> {
         });
       });
     }).catchError((e) {
-      LoginError(
+      CommonError(
           title: 'Login Error!',
           description:
           'Something is wrong. Please check your connection.')
@@ -181,7 +182,7 @@ class _LoginState extends State<Login> {
                         // Email TextFormField
                         RoundTextField(
                             icon: Icon(
-                              Icons.email,
+                              FeatherIcons.mail,
                               color: Colors.grey,
                             ),
                             hintText: 'Email Address',
@@ -193,7 +194,7 @@ class _LoginState extends State<Login> {
                         ),
                         RoundTextField(
                             icon: Icon(
-                              Icons.lock,
+                              FeatherIcons.lock,
                               color: Colors.grey,
                             ),
                             hintText: 'Password',

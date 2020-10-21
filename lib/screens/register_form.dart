@@ -6,7 +6,7 @@ import 'package:flutter_app_learno/screens/home.dart';
 import 'package:flutter_app_learno/widgets/auth_button.dart';
 import 'package:flutter_app_learno/widgets/form_field.dart';
 import 'package:flutter_app_learno/widgets/progress.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 // ignore: must_be_immutable
 class RegisterForm extends StatefulWidget {
@@ -113,7 +113,7 @@ class _RegisterFormState extends State<RegisterForm> {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => Home()));
         }).catchError((e) {
-          LoginError(
+          CommonError(
                   title: 'Form Error!',
                   description:
                       'Something is wrong. Please check your connection.')
@@ -177,7 +177,7 @@ class _RegisterFormState extends State<RegisterForm> {
                         // Email TextFormField
                         RoundTextField(
                             icon: Icon(
-                              Icons.account_circle,
+                              FeatherIcons.user,
                               color: Colors.grey,
                             ),
                             hintText: 'First Name',
@@ -189,7 +189,7 @@ class _RegisterFormState extends State<RegisterForm> {
                         ),
                         RoundTextField(
                             icon: Icon(
-                              Icons.account_circle,
+                              FeatherIcons.user,
                               color: Colors.grey,
                             ),
                             hintText: 'Last Name',
@@ -201,7 +201,7 @@ class _RegisterFormState extends State<RegisterForm> {
                         ),
                         RoundTextField(
                             icon: Icon(
-                              Icons.phone_android,
+                              FeatherIcons.smartphone,
                               color: Colors.grey,
                             ),
                             hintText: 'Mobile Number',
@@ -229,7 +229,7 @@ class _RegisterFormState extends State<RegisterForm> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  Icon(Icons.calendar_today,
+                                  Icon(FeatherIcons.calendar,
                                       color: Colors.grey),
                                   SizedBox(
                                     width: 10,
@@ -266,7 +266,7 @@ class _RegisterFormState extends State<RegisterForm> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Icon(
-                                  FontAwesomeIcons.venusMars,
+                                  FeatherIcons.userCheck,
                                   color: Colors.grey,
                                 ),
                                 SizedBox(
@@ -321,7 +321,7 @@ class _RegisterFormState extends State<RegisterForm> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Icon(
-                                  Icons.people,
+                                  FeatherIcons.penTool,
                                   color: Colors.grey,
                                 ),
                                 SizedBox(
@@ -380,7 +380,7 @@ class _RegisterFormState extends State<RegisterForm> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Icon(
-                                  Icons.people,
+                                  FeatherIcons.home,
                                   color: Colors.grey,
                                 ),
                                 SizedBox(

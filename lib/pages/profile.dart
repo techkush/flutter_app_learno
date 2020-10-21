@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_learno/pages_widgets/upload.dart';
 import 'package:flutter_app_learno/screens/home.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 class Profile extends StatefulWidget {
   final String profileId;
@@ -85,11 +87,16 @@ class _ProfileState extends State<Profile> {
     if (isProfileOwner) {
       return IconButton(
         icon: Icon(
-          Icons.add_a_photo,
+          FeatherIcons.camera,
           color: Color(0xff615DFA),
         ),
         onPressed: () {
-          print('Add a post');
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Upload(
+                        currentUser: currentUser,
+                      )));
         },
       );
     } else {

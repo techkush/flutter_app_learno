@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 // ignore: must_be_immutable
-class LoginError extends StatelessWidget {
-  LoginError({@required this.title, @required this.description});
+class CommonError extends StatelessWidget {
+  CommonError({@required this.title, @required this.description});
 
   String title;
   String description;
@@ -19,7 +19,7 @@ class LoginError extends StatelessWidget {
               child: Row(
                 children: <Widget>[
                   Icon(
-                    FontAwesomeIcons.exclamationCircle,
+                    FeatherIcons.alertTriangle,
                     color: Colors.red,
                   ),
                   SizedBox(

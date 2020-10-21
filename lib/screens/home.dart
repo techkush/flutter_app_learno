@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_learno/errors/login_errors.dart';
 import 'package:flutter_app_learno/models/user.dart';
@@ -10,11 +11,14 @@ import 'package:flutter_app_learno/pages/profile.dart';
 import 'package:flutter_app_learno/pages/subjects.dart';
 import 'package:flutter_app_learno/screens/loading.dart';
 import 'package:flutter_app_learno/widgets/progress.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 String currentUserId;
 User currentUser;
+final DateTime timestamp = DateTime.now();
 final usersRef = Firestore.instance.collection('users');
 final postsRef = Firestore.instance.collection('posts');
+final StorageReference storageRef = FirebaseStorage.instance.ref();
 
 class Home extends StatefulWidget {
   @override
@@ -53,7 +57,7 @@ class _HomeState extends State<Home> {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => Loading()));
     }).catchError((error) {
-      LoginError(
+      CommonError(
           title: 'Sign out Error!',
           description:
           'Something is wrong. Please check your connection.')
@@ -84,23 +88,23 @@ class _HomeState extends State<Home> {
         currentIndex: _pageIndex,
         items: [
           BottomNavigationBarItem(
-            icon: new Icon(Icons.home, color: Color(0xff615DFA),),
+            icon: new Icon(FeatherIcons.home, color: Color(0xff615DFA),),
             title: new Text('Home', style: TextStyle(color: Color(0xff615DFA)),),
           ),
           BottomNavigationBarItem(
-            icon: new Icon(Icons.book, color: Color(0xff615DFA)),
+            icon: new Icon(FeatherIcons.bookOpen, color: Color(0xff615DFA)),
             title: new Text('Subjects', style: TextStyle(color: Color(0xff615DFA))),
           ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.burst_mode, color: Color(0xff615DFA)),
+              icon: Icon(FeatherIcons.layers, color: Color(0xff615DFA)),
               title: Text('Feed', style: TextStyle(color: Color(0xff615DFA)))
           ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.notifications, color: Color(0xff615DFA)),
+              icon: Icon(FeatherIcons.bell, color: Color(0xff615DFA)),
               title: Text('Notification', style: TextStyle(color: Color(0xff615DFA)))
           ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.person, color: Color(0xff615DFA)),
+              icon: Icon(FeatherIcons.user, color: Color(0xff615DFA)),
               title: Text('Profile', style: TextStyle(color: Color(0xff615DFA)))
           )
         ],
