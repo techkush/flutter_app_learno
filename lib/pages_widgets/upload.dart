@@ -3,6 +3,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_learno/errors/login_errors.dart';
 import 'package:flutter_app_learno/models/user.dart';
+import 'package:flutter_app_learno/pages/profile.dart';
 import 'package:flutter_app_learno/screens/home.dart';
 import 'package:flutter_app_learno/widgets/progress.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -293,6 +294,9 @@ class _UploadState extends State<Upload> {
   }
 
   getUserLocation() async {
+    setState(() {
+      isUploading = true;
+    });
     Position position = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     List<Placemark> placemarks = await Geolocator()
@@ -304,5 +308,8 @@ class _UploadState extends State<Upload> {
     String formattedAddress = '${placemark.locality}, ${placemark.country}';
     print(formattedAddress);
     locationController.text = formattedAddress;
+    setState(() {
+      isUploading = false;
+    });
   }
 }

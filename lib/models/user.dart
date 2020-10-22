@@ -11,9 +11,10 @@ class User {
   final String gender;
   final String userRole;
   final String id;
+  final String displayName;
 
   User({this.firstName, this.lastName, this.mobileNumber, this.email,
-      this.photoUrl, this.birthday, this.school, this.gender, this.userRole, this.id});
+      this.photoUrl, this.birthday, this.school, this.gender, this.userRole, this.id, this.displayName});
 
   factory User.fromDocument(DocumentSnapshot doc) {
     return User(
@@ -26,7 +27,8 @@ class User {
       school: doc['school'],
       gender: doc['gender'],
       userRole: doc['userRole'],
-      id: doc['id']
+      id: doc['id'],
+      displayName: doc['displayName']
     );
   }
 }

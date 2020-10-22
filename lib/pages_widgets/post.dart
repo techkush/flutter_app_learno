@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_learno/models/user.dart';
 import 'package:flutter_app_learno/screens/home.dart';
+import 'package:flutter_app_learno/widgets/custom_image.dart';
 import 'package:flutter_app_learno/widgets/progress.dart';
 
 class Post extends StatefulWidget {
@@ -15,12 +17,12 @@ class Post extends StatefulWidget {
 
   Post(
       {this.postId,
-        this.ownerId,
-        this.username,
-        this.location,
-        this.description,
-        this.mediaUrl,
-        this.likes});
+      this.ownerId,
+      this.username,
+      this.location,
+      this.description,
+      this.mediaUrl,
+      this.likes});
 
   factory Post.fromDocument(DocumentSnapshot doc) {
     return Post(
@@ -71,13 +73,13 @@ class _PostState extends State<Post> {
 
   _PostState(
       {this.postId,
-        this.ownerId,
-        this.username,
-        this.location,
-        this.description,
-        this.mediaUrl,
-        this.likeCount,
-        this.likes});
+      this.ownerId,
+      this.username,
+      this.location,
+      this.description,
+      this.mediaUrl,
+      this.likeCount,
+      this.likes});
 
   buildPostHeader() {
     return FutureBuilder(
@@ -97,7 +99,7 @@ class _PostState extends State<Post> {
             child: Text(
               "${user.firstName} ${user.lastName}",
               style:
-              TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
             ),
           ),
           subtitle: Text(location),
@@ -115,7 +117,7 @@ class _PostState extends State<Post> {
       onDoubleTap: () => print('Liking post'),
       child: Stack(
         alignment: Alignment.center,
-        children: <Widget>[Image.network(mediaUrl)],
+        children: <Widget>[cachedNetworkImage(mediaUrl)],
       ),
     );
   }
@@ -125,8 +127,11 @@ class _PostState extends State<Post> {
       children: <Widget>[
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
+
           children: <Widget>[
-            Padding(padding: EdgeInsets.only(top: 40, left: 20),),
+            Padding(
+              padding: EdgeInsets.only(top: 40, left: 20),
+            ),
             GestureDetector(
               onTap: () => print('Liking post'),
               child: Icon(
@@ -135,7 +140,9 @@ class _PostState extends State<Post> {
                 color: Colors.pink,
               ),
             ),
-            Padding(padding: EdgeInsets.only(right: 20),),
+            Padding(
+              padding: EdgeInsets.only(right: 20),
+            ),
             GestureDetector(
               onTap: () => print('showing comments'),
               child: Icon(
@@ -152,30 +159,12 @@ class _PostState extends State<Post> {
               margin: EdgeInsets.only(left: 20),
               child: Text(
                 "$likeCount likes",
-                style: TextStyle(
-                    color: Colors.black, fontWeight: FontWeight.bold
-                ),
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               ),
             )
           ],
         ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(left: 20),
-              child: Text(
-                "$username",
-                style: TextStyle(
-                    color: Colors.black, fontWeight: FontWeight.bold
-                ),
-              ),
-            ),
-            Expanded(
-              child: Text(description),
-            )
-          ],
-        )
       ],
     );
   }
@@ -183,11 +172,24 @@ class _PostState extends State<Post> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         buildPostHeader(),
         buildPostImage(),
-        buildPostFooter()
+        buildPostFooter(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Text(
+            "$username  ",
+            style:
+            TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Text(description, textAlign: TextAlign.start, style: TextStyle(),),
+        ),
       ],
     );
   }

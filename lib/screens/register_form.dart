@@ -107,7 +107,8 @@ class _RegisterFormState extends State<RegisterForm> {
           "birthday": selectedDate,
           "photoUrl": value.photoUrl,
           "email": value.email,
-          "id": value.uid
+          "id": value.uid,
+          "displayName": "$_firstName $_lastName"
         }).then((value) {
           Navigator.of(context).pop();
           Navigator.push(
