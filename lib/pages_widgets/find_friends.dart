@@ -38,6 +38,7 @@ class _FindFriendsState extends State<FindFriends> {
       title: TextFormField(
           controller: searchController,
           style: TextStyle(fontSize: 18),
+          textCapitalization: TextCapitalization.words,
           decoration: InputDecoration(
             hintText: "Search for a user..",
             filled: false,
