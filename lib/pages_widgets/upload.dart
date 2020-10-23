@@ -3,7 +3,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_learno/errors/login_errors.dart';
 import 'package:flutter_app_learno/models/user.dart';
-import 'package:flutter_app_learno/pages/profile.dart';
 import 'package:flutter_app_learno/screens/home.dart';
 import 'package:flutter_app_learno/widgets/progress.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -34,7 +33,7 @@ class _UploadState extends State<Upload> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Upload",
+          isUploading ? "Waiting" : "Upload",
           style: TextStyle(color: Color(0xff615DFA)),
         ),
         backgroundColor: Colors.white,
@@ -223,7 +222,7 @@ class _UploadState extends State<Upload> {
       'mediaUrl': mediaUrl,
       'description': description,
       'location': location,
-      'timestamp': timestamp,
+      'timestamp': DateTime.now(),
       'likes': {}
     });
   }

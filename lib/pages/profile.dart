@@ -74,7 +74,7 @@ class _ProfileState extends State<Profile> {
             SizedBox(
               width: 20,
             ),
-            buildCountColumn('Posts', 0),
+            buildCountColumn('Posts', postCount),
             SizedBox(
               width: 5,
             ),
@@ -124,13 +124,13 @@ class _ProfileState extends State<Profile> {
           color: Color(0xff615DFA),
         ),
         onPressed: () async {
-          Navigator.push(
+          await Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => Upload(
                         currentUser: currentUser,
                       )));
-          refresh();
+          getProfilePost();
         },
       );
     } else {
@@ -138,33 +138,26 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  refresh() {
-    setState(() {
-    });
-  }
-
   buildCurrentButtons() {
     return Padding(
-        padding: EdgeInsets.only(left: 30, right: 30, bottom: 10),
+        padding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
         child: Container(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Container(
                 height: 30,
-                width: MediaQuery.of(context).size.width / 2 - 40,
+                width: MediaQuery.of(context).size.width / 2 - 30,
                 child: RaisedButton(
                   child: Text('Edit Profile'),
                   onPressed: () {
-                    setState(() {
-                      backPostsUpload = 'Hello';
-                    });
+                    //getProfilePost();
                   },
                 ),
               ),
               Container(
                 height: 30,
-                width: MediaQuery.of(context).size.width / 2 - 40,
+                width: MediaQuery.of(context).size.width / 2 - 30,
                 child: RaisedButton(
                   child: Text('Find Friends'),
                   onPressed: () {
@@ -180,14 +173,14 @@ class _ProfileState extends State<Profile> {
 
   buildVisitButtons() {
     return Padding(
-        padding: EdgeInsets.only(left: 30, right: 30, bottom: 10),
+        padding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
         child: Container(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Container(
                 height: 30,
-                width: MediaQuery.of(context).size.width / 2 - 40,
+                width: MediaQuery.of(context).size.width / 2 - 30,
                 child: RaisedButton(
                   child: Text('Follow'),
                   onPressed: () {},
@@ -195,7 +188,7 @@ class _ProfileState extends State<Profile> {
               ),
               Container(
                 height: 30,
-                width: MediaQuery.of(context).size.width / 2 - 40,
+                width: MediaQuery.of(context).size.width / 2 - 30,
                 child: RaisedButton(
                   child: Text('Contact'),
                   onPressed: () {},
@@ -278,24 +271,26 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: <Widget>[
-        buildProfileHeader(),
-        buildProfileDetails(),
-        buildProfileButtons(),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Divider(
-            height: 0,
+    return Scaffold(
+      body: ListView(
+        children: <Widget>[
+          buildProfileHeader(),
+          buildProfileDetails(),
+          buildProfileButtons(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Divider(
+              height: 0,
+            ),
           ),
-        ),
-        buildTogglePostOrientation(),
-        Divider(
-          height: 0.0,
-        ),
-        buildProfilePosts(),
-        SizedBox(height: 10,)
-      ],
+          buildTogglePostOrientation(),
+          Divider(
+            height: 0.0,
+          ),
+          buildProfilePosts(),
+          SizedBox(height: 10,)
+        ],
+      ),
     );
   }
 

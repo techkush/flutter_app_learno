@@ -15,9 +15,10 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 String currentUserId;
 User currentUser;
-final DateTime timestamp = DateTime.now();
 final usersRef = Firestore.instance.collection('users');
 final postsRef = Firestore.instance.collection('posts');
+final commentsRef = Firestore.instance.collection('comments');
+final notificationRef = Firestore.instance.collection('notification');
 final StorageReference storageRef = FirebaseStorage.instance.ref();
 
 class Home extends StatefulWidget {
@@ -101,7 +102,7 @@ class _HomeState extends State<Home> {
           ),
           BottomNavigationBarItem(
               icon: Icon(FeatherIcons.bell, color: Color(0xff615DFA)),
-              title: Text('Notification', style: TextStyle(color: Color(0xff615DFA)))
+              title: Text('Notifications', style: TextStyle(color: Color(0xff615DFA)))
           ),
           BottomNavigationBarItem(
               icon: Icon(FeatherIcons.user, color: Color(0xff615DFA)),

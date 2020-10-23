@@ -38,6 +38,8 @@ dependencies:
   flutter_svg:
   image_picker: ^0.6.0+2
   cached_network_image:
+  animator: ^2.0.1
+  timeago: 2.0.17
 
 dev_dependencies:
   flutter_test:
