@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_learno/errors/login_errors.dart';
 import 'package:flutter_app_learno/models/user.dart';
 import 'package:flutter_app_learno/screens/home.dart';
+import 'package:flutter_app_learno/widgets/profile_image.dart';
 import 'package:flutter_app_learno/widgets/progress.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:geolocator/geolocator.dart';
@@ -22,7 +23,9 @@ class Upload extends StatefulWidget {
 }
 
 class _UploadState extends State<Upload> {
-  File file;
+  final ImagePicker _picker = ImagePicker();
+  PickedFile _imageFile;
+  dynamic _pickImageError;
   bool isUploading = false;
   String postId = Uuid().v4();
   TextEditingController captionController = TextEditingController();
@@ -58,11 +61,11 @@ class _UploadState extends State<Upload> {
               FeatherIcons.check,
               color: Colors.green,
             ),
-            onPressed: isUploading ? null : () => file == null ? null : handleSubmit(),
+            onPressed: isUploading ? null : () => _imageFile == null ? null : handleSubmit(),
           )
         ],
       ),
-      body: file == null
+      body: _imageFile == null
           ? Center(
               child: Text('Upload Image!'),
             )
@@ -72,7 +75,7 @@ class _UploadState extends State<Upload> {
 
   clearImage() {
     setState(() {
-      file = null;
+      _imageFile = null;
     });
   }
 
@@ -80,33 +83,12 @@ class _UploadState extends State<Upload> {
     return ListView(
       children: <Widget>[
         isUploading ? linearProgress() : Container(),
-        Padding(
-          padding: EdgeInsets.only(top: 20.0),
-        ),
-        Container(
-          height: 220.0,
-          width: MediaQuery.of(context).size.width * 0.8,
-          child: Center(
-            child: AspectRatio(
-              aspectRatio: 16 / 9,
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: FileImage(file),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
+        Image.file(File(_imageFile.path), fit: BoxFit.cover,),
         Padding(
           padding: EdgeInsets.only(top: 20.0),
         ),
         ListTile(
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage(currentUser.photoUrl),
-          ),
+          leading: profileImage(currentUser.photoUrl, currentUser.displayName),
           title: Container(
             width: 250.0,
             child: TextField(
@@ -169,7 +151,7 @@ class _UploadState extends State<Upload> {
   }
 
   checkFilesOk(){
-    if(file == null || captionController.text == null || locationController.text == null){
+    if(_imageFile == null || captionController.text == null || locationController.text == null){
       CommonError(
         title: "Upload Error",
         description: "Some fields are empty!",
@@ -183,8 +165,7 @@ class _UploadState extends State<Upload> {
     setState(() {
       isUploading = true;
     });
-    await compressImage();
-    String mediaUrl = await uploadImage(file);
+    String mediaUrl = await uploadImage(File(_imageFile.path));
     createPostInFirestore(
         mediaUrl: mediaUrl,
         location: locationController.text,
@@ -192,22 +173,12 @@ class _UploadState extends State<Upload> {
     captionController.clear();
     locationController.clear();
     setState(() {
-      file = null;
+      _imageFile = null;
       isUploading = false;
     });
     Navigator.of(context).pop();
   }
 
-  compressImage() async {
-    final tempDir = await getTemporaryDirectory();
-    final path = tempDir.path;
-    Im.Image imageFile = Im.decodeImage(file.readAsBytesSync());
-    final compressedImageFile = File('$path/img_$postId.jpg')
-      ..writeAsBytesSync(Im.encodeJpg(imageFile, quality: 85));
-    setState(() {
-      file = compressedImageFile;
-    });
-  }
 
   createPostInFirestore(
       {String mediaUrl, String location, String description}) {
@@ -273,23 +244,39 @@ class _UploadState extends State<Upload> {
   handleTakePhoto() async {
     clearImage();
     Navigator.pop(context);
-    File file = await ImagePicker.pickImage(
-      source: ImageSource.camera,
-      maxHeight: 675,
-      maxWidth: 960,
-    );
-    setState(() {
-      this.file = file;
-    });
+    try {
+      final pickedFile = await _picker.getImage(
+        source: ImageSource.camera,
+        maxHeight: 675,
+        maxWidth: 960,
+        imageQuality: 80
+      );
+      setState(() {
+        _imageFile = pickedFile;
+      });
+    } catch (e) {
+      setState(() {
+        _pickImageError = e;
+      });
+    }
   }
 
   handleChooseFromGallery() async {
     clearImage();
     Navigator.pop(context);
-    File file = await ImagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      this.file = file;
-    });
+    try {
+      final pickedFile = await _picker.getImage(
+        source: ImageSource.gallery,
+        imageQuality: 80,
+      );
+      setState(() {
+        _imageFile = pickedFile;
+      });
+    } catch (e) {
+      setState(() {
+        _pickImageError = e;
+      });
+    }
   }
 
   getUserLocation() async {

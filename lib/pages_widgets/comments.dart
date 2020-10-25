@@ -68,7 +68,10 @@ class CommentsState extends State<Comments> {
     });
     bool isNotPostOwner = postOwnerId != currentUser.id;
     if (isNotPostOwner) {
-      notificationRef.document(postOwnerId).collection('notificationItems').add({
+      notificationRef
+          .document(postOwnerId)
+          .collection('notificationItems')
+          .add({
         "type": "comment",
         "commentData": commentController.text,
         "timestamp": DateTime.now(),
@@ -101,25 +104,25 @@ class CommentsState extends State<Comments> {
           ListTile(
             title: TextFormField(
               controller: commentController,
-              onChanged: (val){
-                if(val.length >= 1){
+              onChanged: (val) {
+                if (val.length >= 1) {
                   setState(() {
                     buttonVisible = true;
                   });
-                }else{
+                } else {
                   setState(() {
                     buttonVisible = false;
                   });
                 }
               },
               cursorColor: Color(0xff615DFA),
-              style: TextStyle(
-                fontSize: 18
-              ),
-              decoration: InputDecoration(labelText: "Write a comment...", focusedBorder: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                errorBorder: InputBorder.none,
-              labelStyle: TextStyle(color: Color(0xff615DFA))),
+              style: TextStyle(fontSize: 18),
+              decoration: InputDecoration(
+                  labelText: "Write a comment...",
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  labelStyle: TextStyle(color: Color(0xff615DFA))),
             ),
             trailing: OutlineButton(
               onPressed: buttonVisible ? addComment : null,
@@ -164,9 +167,18 @@ class Comment extends StatelessWidget {
       children: <Widget>[
         ListTile(
           title: Text(comment),
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage(avatarUrl),
-          ),
+          leading: avatarUrl == null
+              ? CircleAvatar(
+                  child: Text(
+                    '${username[0]}',
+                    style: TextStyle(fontSize: 20, color: Colors.white),
+                  ),
+                  backgroundColor: Color(0xff615DFA),
+                )
+              : CircleAvatar(
+                  backgroundColor: Colors.grey,
+                  backgroundImage: NetworkImage(avatarUrl),
+                ),
           subtitle: Text(timeago.format(timestamp.toDate())),
         ),
         Divider(),

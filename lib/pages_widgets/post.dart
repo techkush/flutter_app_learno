@@ -7,6 +7,7 @@ import 'package:flutter_app_learno/models/user.dart';
 import 'package:flutter_app_learno/pages_widgets/comments.dart';
 import 'package:flutter_app_learno/screens/home.dart';
 import 'package:flutter_app_learno/widgets/custom_image.dart';
+import 'package:flutter_app_learno/widgets/profile_image.dart';
 import 'package:flutter_app_learno/widgets/progress.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -103,10 +104,7 @@ class _PostState extends State<Post> {
         }
         User user = User.fromDocument(snapshot.data);
         return ListTile(
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage(user.photoUrl),
-            backgroundColor: Colors.grey,
-          ),
+          leading: profileImage(user.photoUrl, user.displayName),
           title: GestureDetector(
             onTap: () => print('showing profile'),
             child: Text(

@@ -4,29 +4,44 @@ import 'package:flutter_app_learno/pages/notifications.dart';
 
 class UserResult extends StatelessWidget {
   final User user;
+
   UserResult(this.user);
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme.of(context).primaryColor.withOpacity(0.7),
+      color: Colors.white60,
       child: Column(
         children: <Widget>[
           GestureDetector(
             onTap: () => showProfile(context, profileId: user.id),
             child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.grey,
-                radius: 30,
-                backgroundImage: NetworkImage(user.photoUrl),
+              leading: user.photoUrl == null
+                  ? CircleAvatar(
+                      radius: 30,
+                      child: Text(
+                        '${user.displayName[0]}',
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      ),
+                      backgroundColor: Color(0xff615DFA),
+                    )
+                  : CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Colors.grey,
+                      backgroundImage: NetworkImage(user.photoUrl),
+                    ),
+              title: Text(
+                user.displayName,
+                style:
+                    TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
               ),
-              title: Text(user.displayName, style: TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.bold
-              ), ),
-              subtitle: Text(user.school, style: TextStyle(
-                  color: Colors.white
-              ),),
+              subtitle: Text(
+                user.school,
+                style: TextStyle(color: Colors.grey),
+              ),
             ),
           ),
+          SizedBox(height: 3,),
           Divider(
             height: 2.0,
             color: Colors.white54,

@@ -77,7 +77,7 @@ class _HomeState extends State<Home> {
     if (_pageIndex == 1) return Subjects();
     if (_pageIndex == 2) return Feed();
     if (_pageIndex == 3) return Notifications();
-    if (_pageIndex == 4) return Profile(profileId: currentUser?.id,);
+    if (_pageIndex == 4) return Profile(profileId: currentUser?.id, backButton: false);
   }
 
   @override

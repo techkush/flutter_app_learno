@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_learno/pages/profile.dart';
 import 'package:flutter_app_learno/pages_widgets/post_screen.dart';
 import 'package:flutter_app_learno/screens/home.dart';
+import 'package:flutter_app_learno/widgets/profile_image.dart';
 import 'package:flutter_app_learno/widgets/progress.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -170,9 +171,7 @@ class NotificationItem extends StatelessWidget {
           ),
           leading: GestureDetector(
             onTap: () => showProfile(context, profileId: userId),
-            child: CircleAvatar(
-              backgroundImage: NetworkImage(userProfileImg),
-            ),
+            child: profileImage(userProfileImg, username),
           ),
           subtitle: Text(
             timeago.format(timestamp.toDate()),
@@ -191,6 +190,7 @@ showProfile(BuildContext context, {String profileId}) {
     MaterialPageRoute(
       builder: (context) => Profile(
         profileId: profileId,
+        backButton: true,
       ),
     ),
   );

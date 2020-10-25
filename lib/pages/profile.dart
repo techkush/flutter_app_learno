@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_learno/models/user.dart';
 import 'package:flutter_app_learno/pages_widgets/find_friends.dart';
 import 'package:flutter_app_learno/pages_widgets/post.dart';
 import 'package:flutter_app_learno/pages_widgets/upload.dart';
@@ -10,8 +11,9 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 class Profile extends StatefulWidget {
   final String profileId;
+  final bool backButton;
 
-  Profile({this.profileId});
+  Profile({this.profileId, @required this.backButton});
 
   @override
   _ProfileState createState() => _ProfileState();
@@ -23,14 +25,16 @@ class _ProfileState extends State<Profile> {
   String postOrientation = "grid";
   List<Post> posts = [];
   String backPostsUpload;
+  User profileData;
 
   @override
   void initState() {
     super.initState();
-    getProfilePost();
+    getProfilePost(false);
+    getProfileData();
   }
 
-  getProfilePost() async {
+  getProfilePost(bool uploadTime) async {
     setState(() {
       isLoading = true;
     });
@@ -40,9 +44,21 @@ class _ProfileState extends State<Profile> {
         .orderBy('timestamp', descending: true)
         .getDocuments();
     setState(() {
-      isLoading = false;
       postCount = snapshot.documents.length;
       posts = snapshot.documents.map((doc) => Post.fromDocument(doc)).toList();
+    });
+    if (uploadTime) {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> getProfileData() async {
+    DocumentSnapshot doc = await usersRef.document(widget.profileId).get();
+    setState(() {
+      profileData = User.fromDocument(doc);
+      isLoading = false;
     });
   }
 
@@ -56,11 +72,11 @@ class _ProfileState extends State<Profile> {
             CircleAvatar(
               radius: 42.0,
               backgroundColor: Colors.blueGrey,
-              child: currentUser.photoUrl == null
+              child: profileData.photoUrl == null
                   ? CircleAvatar(
                       radius: 40.0,
                       child: Text(
-                        '${currentUser.firstName[0]}',
+                        '${profileData.firstName[0]}',
                         style: TextStyle(fontSize: 40, color: Colors.white),
                       ),
                       backgroundColor: Color(0xff615DFA),
@@ -68,7 +84,7 @@ class _ProfileState extends State<Profile> {
                   : CircleAvatar(
                       radius: 40.0,
                       backgroundColor: Colors.grey,
-                      backgroundImage: NetworkImage(currentUser.photoUrl),
+                      backgroundImage: NetworkImage(profileData.photoUrl),
                     ),
             ),
             SizedBox(
@@ -130,7 +146,7 @@ class _ProfileState extends State<Profile> {
                   builder: (context) => Upload(
                         currentUser: currentUser,
                       )));
-          getProfilePost();
+          getProfilePost(true);
         },
       );
     } else {
@@ -161,8 +177,8 @@ class _ProfileState extends State<Profile> {
                 child: RaisedButton(
                   child: Text('Find Friends'),
                   onPressed: () {
-                    Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => FindFriends()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => FindFriends()));
                   },
                 ),
               )
@@ -254,16 +270,12 @@ class _ProfileState extends State<Profile> {
         IconButton(
           onPressed: () => setPostOrientation("grid"),
           icon: Icon(Icons.grid_on),
-          color: postOrientation == 'grid'
-              ? Color(0xff615DFA)
-              : Colors.grey,
+          color: postOrientation == 'grid' ? Color(0xff615DFA) : Colors.grey,
         ),
         IconButton(
           onPressed: () => setPostOrientation("list"),
           icon: Icon(Icons.list),
-          color: postOrientation == 'list'
-              ? Color(0xff615DFA)
-              : Colors.grey,
+          color: postOrientation == 'list' ? Color(0xff615DFA) : Colors.grey,
         ),
       ],
     );
@@ -271,27 +283,45 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView(
-        children: <Widget>[
-          buildProfileHeader(),
-          buildProfileDetails(),
-          buildProfileButtons(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Divider(
-              height: 0,
+    return isLoading
+        ? Scaffold(
+            body: Center(
+              child: circularProgress(),
             ),
-          ),
-          buildTogglePostOrientation(),
-          Divider(
-            height: 0.0,
-          ),
-          buildProfilePosts(),
-          SizedBox(height: 10,)
-        ],
-      ),
-    );
+          )
+        : Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              automaticallyImplyLeading: widget.backButton,
+              iconTheme: IconThemeData(
+                color: Color(0xff615DFA), //change your color here
+              ),
+              title: Text("${profileData.displayName}",
+                  style: TextStyle(color: Color(0xff615DFA))),
+            ),
+            body: ListView(
+              children: <Widget>[
+                buildProfileHeader(),
+                buildProfileDetails(),
+                buildProfileButtons(),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Divider(
+                    height: 0,
+                  ),
+                ),
+                buildTogglePostOrientation(),
+                Divider(
+                  height: 0.0,
+                ),
+                buildProfilePosts(),
+                SizedBox(
+                  height: 10,
+                )
+              ],
+            ),
+          );
   }
 
   Column userDetails() {
@@ -300,13 +330,13 @@ class _ProfileState extends State<Profile> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Text(
-          '${currentUser.firstName} ${currentUser.lastName}',
+          '${profileData.firstName} ${profileData.lastName}',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         SizedBox(
           height: 2,
         ),
-        Text('${currentUser.school} | ${currentUser.userRole}')
+        Text('${profileData.school} | ${profileData.userRole}')
       ],
     );
   }

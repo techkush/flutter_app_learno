@@ -21,28 +21,27 @@ class PostScreen extends StatelessWidget {
         if (!snapshot.hasData) {
           return circularProgress();
         }
+        print(snapshot.data['postId']);
         Post post = Post.fromDocument(snapshot.data);
-        return Center(
-          child: Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.white,
-                iconTheme: IconThemeData(
-                  color: Color(0xff615DFA), //change your color here
-                ),
-              title: Text(
-                  "Post",
-                  style: TextStyle(color: Color(0xff615DFA))
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+              iconTheme: IconThemeData(
+                color: Color(0xff615DFA), //change your color here
               ),
+            title: Text(
+                "Post",
+                style: TextStyle(color: Color(0xff615DFA))
             ),
-            body: SafeArea(
-              child: ListView(
-                children: <Widget>[
-                  Container(
-                    child: post,
-                  ),
-                  SizedBox(height: 30,),
-                ],
-              ),
+          ),
+          body: SafeArea(
+            child: ListView(
+              children: <Widget>[
+                Container(
+                  child: post,
+                ),
+                SizedBox(height: 30,),
+              ],
             ),
           ),
         );

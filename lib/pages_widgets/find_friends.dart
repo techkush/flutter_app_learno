@@ -24,12 +24,6 @@ class _FindFriendsState extends State<FindFriends> {
     });
   }
 
-  clearSearch() {
-    searchController.clear();
-    setState(() {
-      searchResultsFuture = null;
-    });
-  }
 
   buildSearchField() {
     return AppBar(
@@ -48,7 +42,9 @@ class _FindFriendsState extends State<FindFriends> {
             prefixIcon: Icon(FeatherIcons.search, size: 28),
             suffixIcon: IconButton(
               icon: Icon(FeatherIcons.x),
-              onPressed: clearSearch,
+              onPressed: (){
+                Navigator.pop(context);
+              },
             ),
           ),
           onFieldSubmitted: handleSearch),
