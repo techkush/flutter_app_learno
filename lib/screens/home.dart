@@ -19,6 +19,8 @@ final usersRef = Firestore.instance.collection('users');
 final postsRef = Firestore.instance.collection('posts');
 final commentsRef = Firestore.instance.collection('comments');
 final notificationRef = Firestore.instance.collection('notification');
+final followersRef = Firestore.instance.collection('followers');
+final followingRef = Firestore.instance.collection('following');
 final StorageReference storageRef = FirebaseStorage.instance.ref();
 
 class Home extends StatefulWidget {

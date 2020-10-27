@@ -93,6 +93,8 @@ class _UploadState extends State<Upload> {
             width: 250.0,
             child: TextField(
               controller: captionController,
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
               decoration: InputDecoration(
                 hintText: "Write a caption...",
                 border: InputBorder.none,
