@@ -200,7 +200,7 @@ class _ProfileState extends State<Profile> {
     // delete activity feed item for them
     notificationRef
         .document(widget.profileId)
-        .collection('feedItems')
+        .collection('notificationItems')
         .document(currentUserId)
         .get()
         .then((doc) {
