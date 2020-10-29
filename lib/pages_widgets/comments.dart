@@ -67,7 +67,7 @@ class CommentsState extends State<Comments> {
       "userId": currentUser.id,
     });
     bool isNotPostOwner = postOwnerId != currentUser.id;
-    if (isNotPostOwner) {
+    if (true) {
       notificationRef
           .document(postOwnerId)
           .collection('notificationItems')

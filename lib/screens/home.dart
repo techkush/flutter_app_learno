@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_learno/errors/login_errors.dart';
@@ -12,6 +14,7 @@ import 'package:flutter_app_learno/pages/subjects.dart';
 import 'package:flutter_app_learno/screens/loading.dart';
 import 'package:flutter_app_learno/widgets/progress.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 String currentUserId;
 User currentUser;
@@ -21,6 +24,7 @@ final commentsRef = Firestore.instance.collection('comments');
 final notificationRef = Firestore.instance.collection('notification');
 final followersRef = Firestore.instance.collection('followers');
 final followingRef = Firestore.instance.collection('following');
+final timelineRef = Firestore.instance.collection('timeline');
 final StorageReference storageRef = FirebaseStorage.instance.ref();
 
 class Home extends StatefulWidget {
@@ -29,7 +33,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   int _pageIndex = 0;
   bool _isLoading = false;
 
@@ -52,6 +57,7 @@ class _HomeState extends State<Home> {
     setState(() {
       _isLoading = false;
     });
+    await configurePushNotifications();
   }
 
   void signOut(BuildContext context) {
@@ -68,6 +74,50 @@ class _HomeState extends State<Home> {
     });
   }
 
+  Future<void> configurePushNotifications() async {
+    if (Platform.isIOS) await getiOSPermission();
+
+    _firebaseMessaging.getToken().then((token) {
+      print("Firebase Messaging Token: $token\n");
+      usersRef
+          .document(currentUser.id)
+          .updateData({"androidNotificationToken": token});
+    });
+
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("on message: $message\n");
+        final String recipientId = message['data']['recipient'];
+        final String body = message['notification']['body'];
+        if (recipientId == currentUser.id) {
+          print("Notification shown!");
+          SnackBar snackbar = SnackBar(
+              content: InkWell(
+                onTap: () {
+                  setState(() {
+                    _pageIndex = 3;
+                  });
+                },
+                child: Text(
+                  body,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ));
+          _scaffoldKey.currentState.showSnackBar(snackbar);
+        }
+        print("Notification NOT shown");
+      },
+    );
+  }
+
+  Future<void> getiOSPermission() {
+    _firebaseMessaging.requestNotificationPermissions(
+        IosNotificationSettings(alert: true, badge: true, sound: true));
+    _firebaseMessaging.onIosSettingsRegistered.listen((settings) {
+      print("Settings registered: $settings");
+    });
+  }
+
   void _onTabTapped(int index) {
     setState(() {
       _pageIndex = index;
@@ -77,7 +127,7 @@ class _HomeState extends State<Home> {
   Widget screen(context) {
     if (_pageIndex == 0) return HomePage();
     if (_pageIndex == 1) return Subjects();
-    if (_pageIndex == 2) return Feed();
+    if (_pageIndex == 2) return Feed(currentUser: currentUser);
     if (_pageIndex == 3) return Notifications();
     if (_pageIndex == 4) return Profile(profileId: currentUser?.id, backButton: false);
   }
@@ -85,6 +135,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: SafeArea(child: _isLoading ? linearProgress() : screen(context)),
       bottomNavigationBar: BottomNavigationBar(
         onTap: _onTabTapped,

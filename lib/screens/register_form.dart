@@ -15,7 +15,6 @@ class RegisterForm extends StatefulWidget {
 }
 
 class _RegisterFormState extends State<RegisterForm> {
-
   String _firstName;
   String _lastName;
   String _mobileNumber;
@@ -96,7 +95,12 @@ class _RegisterFormState extends State<RegisterForm> {
       setState(() {
         _loading = true;
       });
-      await FirebaseAuth.instance.currentUser().then((value) {
+      await FirebaseAuth.instance.currentUser().then((value) async {
+        await followersRef
+            .document(value.uid)
+            .collection('userFollowers')
+            .document(value.uid)
+            .setData({});
         Firestore.instance.collection('users').document(value.uid).setData({
           "firstName": _firstName,
           "lastName": _lastName,
@@ -110,6 +114,7 @@ class _RegisterFormState extends State<RegisterForm> {
           "id": value.uid,
           "displayName": "$_firstName $_lastName"
         }).then((value) {
+
           Navigator.of(context).pop();
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => Home()));
@@ -214,8 +219,7 @@ class _RegisterFormState extends State<RegisterForm> {
                         ),
                         InkWell(
                           onTap: () {
-                            FocusScope.of(context)
-                                .requestFocus(FocusNode());
+                            FocusScope.of(context).requestFocus(FocusNode());
                             _selectDate(context);
                           },
                           child: Container(
